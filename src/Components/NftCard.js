@@ -24,6 +24,9 @@ const NftCard = (props) => {
       return `${waifuPrefix}${token.id}.png`;
     if (token.uri && token.uri.startsWith('Qm'))
       return `${ipfsPrefix}${token.uri}`;
+    if (token.uri && token.uri.startsWith('ipfs://')) {
+      return `${ipfsPrefix}${token.uri.substr(7, token.uri.length)}`;
+    }
     if (validGroup() && token.type === 65) {
       const tokenGroup = groups.filter((g) => g.id === token.parent.id);
       let uri = tokenGroup[0].imagesUri;
