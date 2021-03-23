@@ -125,6 +125,12 @@ const GroupList = (props) => {
                 </Typography>
               </AccordionDetails>
               <AccordionDetails>
+                <Typography className={classes.heading}>Images URI</Typography>
+                <Typography className={classes.secondaryHeading}>
+                  {row.imagesUri}
+                </Typography>
+              </AccordionDetails>
+              <AccordionDetails>
                 <Typography className={classes.heading}>Quantity</Typography>
                 <Typography className={classes.secondaryHeading}>
                   {row.quantity}
