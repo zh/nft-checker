@@ -12,6 +12,8 @@ import {
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import API from '../services/api.service';
 
+const explorerUri = 'https://simpleledger.info/#token/';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
@@ -106,7 +108,14 @@ const GroupList = (props) => {
               <AccordionDetails>
                 <Typography className={classes.heading}>TXID</Typography>
                 <Typography className={classes.secondaryHeading}>
-                  {row.id}
+                  <a
+                    href={`${explorerUri}${row.id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    download
+                  >
+                    {row.id}
+                  </a>
                 </Typography>
               </AccordionDetails>
               <AccordionDetails>
