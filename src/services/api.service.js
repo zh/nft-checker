@@ -1,6 +1,9 @@
 import axios from 'axios';
+import BCP from '../services/bcp.service';
 
 const slpdbUri = 'https://slpdb.fountainhead.cash/q/';
+const bitdbUri = 'https://bitdb.fountainhead.cash/q/';
+
 const btoa = function (str) {
   return Buffer.from(str).toString('base64');
 };
@@ -16,9 +19,9 @@ const info2obj = (info) => {
   return obj;
 };
 
-const querySlpDB = async (q) => {
+const queryDB = async (uri, q) => {
   const b64 = btoa(JSON.stringify(q));
-  const url = slpdbUri + b64;
+  const url = uri + b64;
   const options = {
     method: 'GET',
     headers: {
@@ -28,6 +31,14 @@ const querySlpDB = async (q) => {
   };
   const result = await axios(options);
   return result.data ? result.data : null;
+};
+
+const querySlpDB = async (q) => {
+  return queryDB(slpdbUri, q);
+};
+
+const queryBitDB = async (q) => {
+  return queryDB(bitdbUri, q);
 };
 
 const getGroupsList = async () => {
@@ -103,5 +114,24 @@ const getTokenInfo = async (txid) => {
   }
 };
 
+const getBCP = async (txid) => {
+  try {
+    const query = {
+      v: 3,
+      q: {
+        find: {
+          'tx.h': txid,
+          $text: { $search: 'BCP' },
+        },
+      },
+    };
+    const result = await queryBitDB(query);
+    if (!result || !result.c || result.c.length === 0) return null;
+    return BCP.fromTx(result.c[0].out[0]);
+  } catch (error) {
+    console.error('error in getBCP(): ', error);
+  }
+};
+
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { getTokenInfo, getTokensInfo, getGroupsList };
+export default { getTokenInfo, getTokensInfo, getGroupsList, getBCP };

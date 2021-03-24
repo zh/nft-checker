@@ -6,6 +6,7 @@ const Routes = () => {
   return (
     <Switch>
       <Route exact path="/" component={Pages.Home} />
+      <Route path="/view/:txid" component={Pages.Viewer} />
     </Switch>
   );
 };
