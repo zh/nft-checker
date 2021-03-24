@@ -5,10 +5,12 @@ import {
   CardActionArea,
   CardActions,
   CardContent,
-  CardMedia,
   CardHeader,
 } from '@material-ui/core';
 import { red, green } from '@material-ui/core/colors';
+import NFT from '../services/nft.service';
+import MediaPayload from './MediaPayload';
+import BcpPayload from './BcpPayload';
 
 const explorerUri = 'https://simpleledger.info/#token/';
 
@@ -16,32 +18,6 @@ const NftCard = (props) => {
   const { token, groups, size } = props;
 
   if (!token || !token.id) return <div>No such token</div>;
-
-  const CardImage = (token, size = 128) => {
-    const waifuPrefix = `https://icons.waifufaucet.com/${size}/`;
-    const ipfsPrefix = 'https://ipfs.io/ipfs/';
-    if (token.symbol.toLowerCase() === 'waifu')
-      return `${waifuPrefix}${token.id}.png`;
-    if (token.uri && token.uri.startsWith('Qm'))
-      return `${ipfsPrefix}${token.uri}`;
-    if (token.uri && token.uri.startsWith('ipfs://')) {
-      return `${ipfsPrefix}${token.uri.substr(7, token.uri.length)}`;
-    }
-    if (validGroup() && token.type === 65) {
-      const tokenGroup = groups.filter((g) => g.id === token.parent.id);
-      let uri = tokenGroup[0].imagesUri;
-      if (uri.substr(-1) !== '/') uri += '/';
-      return `${uri}${size}/${token.id}.png`;
-    }
-    return `https://via.placeholder.com/${size}.png`;
-  };
-
-  const validGroup = () => {
-    if (!token) return false;
-    const tokenId = token.type === 65 ? token.parent.id : token.id;
-    const groupIds = Object.keys(groups).map((g) => groups[g].id);
-    return groupIds.includes(tokenId);
-  };
 
   const token2header = (token) => {
     let text = token.symbol;
@@ -51,7 +27,7 @@ const NftCard = (props) => {
     return text;
   };
 
-  const groupColor = validGroup() ? green[500] : red[600];
+  const groupColor = NFT.validGroup(token, groups) ? green[500] : red[600];
 
   return (
     <Card>
@@ -61,15 +37,10 @@ const NftCard = (props) => {
           subheader={token2header(token)}
           style={{ color: groupColor }}
         />
-        {token.type === 65 && (
-          <CardMedia
-            image={CardImage(token)}
-            title={token.name}
-            style={{
-              height: `${size}px`,
-              width: `${size}px`,
-            }}
-          />
+        {NFT.hasBCP(token) ? (
+          <BcpPayload token={token} size={size} />
+        ) : (
+          <MediaPayload token={token} groups={groups} size={size} />
         )}
         <CardContent>
           {token.uri && (
