@@ -12,6 +12,7 @@ import {
 import API from '../services/api.service';
 import NftCard from '../Components/NftCard';
 import GroupList from '../Components/GroupList';
+import Disclaimer from '../Components/Disclaimer';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,6 +30,11 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 'auto',
     width: '100%',
     itemsAlign: 'center',
+  },
+  disclaimer: {
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    width: '100%',
   },
 }));
 
@@ -119,6 +125,13 @@ const Home = (props) => {
         <Grid item xs={12}>
           <Paper className={classes.groups}>
             <GroupList token={token} />
+          </Paper>
+        </Grid>
+      </Grid>
+      <Grid container spacing={3}>
+        <Grid item xs={12}>
+          <Paper className={classes.disclaimer}>
+            <Disclaimer />
           </Paper>
         </Grid>
       </Grid>

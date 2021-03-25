@@ -11,6 +11,7 @@ import {
 } from '@material-ui/core';
 import API from '../services/api.service';
 import NftCard from '../Components/NftCard';
+import Disclaimer from '../Components/Disclaimer';
 
 const ButtonWrapper = styled.div`
   display: flex;
@@ -32,6 +33,11 @@ const useStyles = makeStyles((theme) => ({
     width: '557px',
     itemsAlign: 'center',
     color: theme.palette.text.secondary,
+  },
+  disclaimer: {
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    width: '100%',
   },
 }));
 
@@ -87,6 +93,14 @@ const Viewer = (props) => {
                 ) : (
                   <NftCard token={token} size={128} />
                 )}
+              </Paper>
+            </Grid>
+          </Grid>
+
+          <Grid container spacing={3}>
+            <Grid item xs={12}>
+              <Paper className={classes.disclaimer}>
+                <Disclaimer />
               </Paper>
             </Grid>
           </Grid>
