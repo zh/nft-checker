@@ -58,7 +58,22 @@ const BcpPayload = (props) => {
         <>
           {BCP.typeStr(bcp) === 'image' && imagePayload(token, bcp, size)}
           {['audio', 'video'].includes(BCP.typeStr(bcp)) && mediaPayload(bcp)}
-          {BCP.typeStr(bcp) === 'image' && textPayload(bcp)}
+          {BCP.typeStr(bcp) === 'text' && textPayload(bcp)}
+          {BCP.onIPFS(bcp) && (
+            <CardContent>
+              <Typography variant="subtitle2">
+                IPFS Hash:{' '}
+                <a
+                  href={BCP.dataStr(bcp)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  download
+                >
+                  {bcp.data.hash.toString()}
+                </a>
+              </Typography>
+            </CardContent>
+          )}
         </>
       )}
     </>
