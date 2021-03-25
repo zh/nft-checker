@@ -31,5 +31,8 @@ const hasBCP = (token) => {
   return false;
 };
 
+const onIPFS = (token) =>
+  token.uri && (token.uri.startsWith('Qm') || token.uri.startsWith('ipfs://'));
+
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { validGroup, imageURI, hasBCP };
+export default { validGroup, imageURI, hasBCP, onIPFS };

@@ -1,5 +1,5 @@
 import React from 'react';
-import { CardMedia } from '@material-ui/core';
+import { CardMedia, CardContent, Typography } from '@material-ui/core';
 import NFT from '../services/nft.service';
 
 const MediaPayload = (props) => {
@@ -16,6 +16,21 @@ const MediaPayload = (props) => {
             width: `${size}px`,
           }}
         />
+      )}
+      {NFT.onIPFS(token) && (
+        <CardContent>
+          <Typography variant="subtitle2">
+            IPFS:{' '}
+            <a
+              href={NFT.imageURI(token, groups, size)}
+              target="_blank"
+              rel="noopener noreferrer"
+              download
+            >
+              {token.uri}
+            </a>
+          </Typography>
+        </CardContent>
       )}
     </>
   );

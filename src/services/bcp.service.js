@@ -47,5 +47,7 @@ const typeStr = (bcp) => {
   return 'image';
 };
 
+const onIPFS = (bcp) => bcp.source === BCP_SRC_IPFS;
+
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { fromTx, dataStr, typeStr };
+export default { fromTx, dataStr, typeStr, onIPFS };
