@@ -1,13 +1,15 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { HashRouter, Switch, Route } from 'react-router-dom';
 import Pages from './Pages';
 
 const Routes = () => {
   return (
-    <Switch>
-      <Route exact path="/" component={Pages.Home} />
-      <Route path="/view/:txid" component={Pages.Viewer} />
-    </Switch>
+    <HashRouter>
+      <Switch>
+        <Route exact path="/" component={Pages.Home} />
+        <Route path="/view/:txid" component={Pages.Viewer} />
+      </Switch>
+    </HashRouter>
   );
 };
 
