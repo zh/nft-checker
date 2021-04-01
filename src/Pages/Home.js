@@ -44,7 +44,7 @@ const Home = (props) => {
   const [loading, setLoading] = useState(false);
   const [tx, setTx] = useState(null);
   const [token, setToken] = useState({});
-  const [groups, setGroups] = useState({});
+  const [groups, setGroups] = useState([]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

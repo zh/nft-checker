@@ -47,6 +47,7 @@ const Viewer = (props) => {
 
   const [loading, setLoading] = useState(false);
   const [token, setToken] = useState({});
+  const [groups, setGroups] = useState([]);
   const [reload, setReload] = useState(0);
 
   React.useEffect(() => {
@@ -58,6 +59,11 @@ const Viewer = (props) => {
       setLoading(false);
       if (!data || !data.name) return;
       setToken(data);
+      setLoading(true);
+      data = await API.getGroupsList();
+      setLoading(false);
+      if (!data) return;
+      setGroups(data);
     })();
   }, [txid, setToken, reload]);
 
@@ -91,7 +97,7 @@ const Viewer = (props) => {
                 {loading ? (
                   <CircularProgress />
                 ) : (
-                  <NftCard token={token} size={128} />
+                  <NftCard token={token} groups={groups} size={128} />
                 )}
               </Paper>
             </Grid>
