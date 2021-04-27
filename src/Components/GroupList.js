@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import styled from 'styled-components';
 import { makeStyles } from '@material-ui/core/styles';
 import { green } from '@material-ui/core/colors';
 import {
@@ -10,6 +11,7 @@ import {
   AccordionDetails,
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Pagination from './Pagination';
 import API from '../services/api.service';
 
 const explorerUri = 'https://simpleledger.info/#token/';
@@ -39,23 +41,59 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const ButtonsWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-begin;
+
+  button {
+    margin-right: 10px;
+  }
+
+  button {
+    margin-right: 10px;
+  }
+`;
+
 const GroupList = (props) => {
   const { token } = props;
   const classes = useStyles();
   const [loading, setLoading] = useState(true);
-  const [groups, setGroups] = useState([]);
+  const [groupsList, setGroupsList] = useState([]);
+  const [groupsInfo, setGroupsInfo] = useState([]);
   const [reload, setReload] = useState(0);
+  // pagination
+  const [offset, setOffset] = useState(0);
+  const [perPage] = useState(20);
 
   React.useEffect(() => {
     (async () => {
       setLoading(true);
-      const data = await API.getGroupsList();
-      setLoading(false);
-      if (!data) return;
-      setGroups(data);
+      const list = await setAllGroups();
+      const txids = Array.from(list.keys());
+      const slice = txids.slice(offset, offset + perPage);
+      const info = await API.getGroupsInfo(slice, list);
+      if (info) setGroupsInfo(info);
       setLoading(false);
     })();
-  }, [setGroups, reload]);
+  }, [reload, offset, perPage]);
+
+  const setAllGroups = async () => {
+    const list = await API.getGroupsList();
+    if (!list) return [];
+    setGroupsList(list);
+    return list;
+  };
+
+  const setNewOffset = async (newOffset) => {
+    setOffset(newOffset);
+    setLoading(true);
+    const txids = Array.from(groupsList.keys());
+    const slice = txids.slice(newOffset, newOffset + perPage);
+    const info = await API.getGroupsInfo(slice, groupsList);
+    if (info) setGroupsInfo(info);
+    setLoading(false);
+  };
 
   const currentGroup = (id) => {
     if (!token) return false;
@@ -69,17 +107,26 @@ const GroupList = (props) => {
         <CircularProgress />
       ) : (
         <>
-          <Button
-            variant="outlined"
-            size="large"
-            onClick={() => {
-              setReload(reload + 1);
-            }}
-          >
-            <i className="fa fa-refresh"></i>
-            &nbsp;Refresh
-          </Button>
-          {groups.map((row, index) => (
+          <ButtonsWrapper>
+            <Button
+              variant="outlined"
+              size="large"
+              onClick={() => {
+                setReload(reload + 1);
+              }}
+            >
+              <i className="fa fa-refresh"></i>
+              &nbsp;Refresh
+            </Button>
+            Pages:{' '}
+            <Pagination
+              data={Array.from(groupsList.keys())}
+              setOffset={setNewOffset}
+              offset={offset}
+              perPage={perPage}
+            />
+          </ButtonsWrapper>
+          {groupsInfo.map((row, index) => (
             <Accordion key={row.id}>
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
