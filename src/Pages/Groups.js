@@ -25,7 +25,7 @@ const Groups = () => {
   const classes = useStyles();
 
   return (
-    <Container>
+    <Container maxWidth="md">
       <Typography color="textPrimary" gutterBottom variant="h2" align="center">
         NFT Groups Info
       </Typography>

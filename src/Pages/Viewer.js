@@ -58,7 +58,7 @@ const Viewer = (props) => {
   }, [txid, setToken]);
 
   return (
-    <Container className={classes.root}>
+    <Container maxWidth="md" className={classes.root}>
       <Typography color="textPrimary" gutterBottom variant="h2" align="center">
         NFT Viewer
       </Typography>

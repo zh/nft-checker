@@ -71,7 +71,7 @@ const Home = (props) => {
   );
 
   return (
-    <Container>
+    <Container maxWidth="md">
       <Typography color="textPrimary" gutterBottom variant="h2" align="center">
         NFT Info
       </Typography>
