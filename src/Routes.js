@@ -8,6 +8,7 @@ const Routes = () => {
       <Switch>
         <Route exact path="/" component={Pages.Home} />
         <Route path="/view/:txid" component={Pages.Viewer} />
+        <Route exact path="/groups" component={Pages.Groups} />
       </Switch>
     </HashRouter>
   );

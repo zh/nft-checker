@@ -2,7 +2,7 @@ const validGroup = (token, groups) => {
   if (!token) return false;
   if (!groups) return true;
   const tokenId = token.type === 65 ? token.parent.id : token.id;
-  const groupIds = Object.keys(groups).map((g) => groups[g].id);
+  const groupIds = Array.from(groups.keys());
   return groupIds.includes(tokenId);
 };
 

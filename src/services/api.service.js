@@ -52,24 +52,29 @@ const getGroupsList = async () => {
     url,
   };
   const result = await axios(options);
-  let list = [];
+  const map = new Map();
   if (result.data) {
     for (const d in result.data) {
-      list.push(d);
+      map.set(d, result.data[d]);
     }
-    const info = await getTokensInfo(list);
-    list = []; // reuse list
-    for (const t in info) {
-      let groupInfo = info2obj(info[t]);
-      groupInfo.imagesUri = result.data[groupInfo.id];
-      list.push(groupInfo);
-    }
+  }
+  return map;
+};
+
+const getGroupsInfo = async (txids, data) => {
+  const list = [];
+  const info = await getTokensInfo(txids);
+  for (const t in info) {
+    const groupInfo = info2obj(info[t]);
+    groupInfo.imagesUri = data.get(groupInfo.id);
+    list.push(groupInfo);
   }
   return list;
 };
 
 const getTokensInfo = async (txids) => {
   try {
+    // txids.length
     const query = {
       v: 3,
       q: {
@@ -90,7 +95,7 @@ const getTokensInfo = async (txids) => {
   }
 };
 
-const getTokenInfo = async (txid) => {
+const getTokenInfo = async (txid, data) => {
   try {
     const query = {
       v: 3,
@@ -106,7 +111,8 @@ const getTokenInfo = async (txid) => {
     if (!result || !result.t || result.t.length === 0) return [];
     const details = info2obj(result.t[0]);
     if (details.type === 65) {
-      details.parent = await getTokenInfo(details.parent);
+      details.parent = await getTokenInfo(details.parent, data);
+      details.parent.imagesUri = data.get(details.parent.id);
     }
     return details;
   } catch (error) {
@@ -134,4 +140,10 @@ const getBCP = async (txid) => {
 };
 
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { getTokenInfo, getTokensInfo, getGroupsList, getBCP };
+export default {
+  getTokenInfo,
+  getTokensInfo,
+  getGroupsList,
+  getGroupsInfo,
+  getBCP,
+};
