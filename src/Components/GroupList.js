@@ -1,36 +1,16 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { makeStyles } from '@material-ui/core/styles';
-import { green } from '@material-ui/core/colors';
 import { Button, CircularProgress } from '@material-ui/core';
 import NftGroupInfo from './NftGroupInfo';
 import Pagination from './Pagination';
 import API from '../services/api.service';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
   root: {
     width: '100%',
   },
-  heading: {
-    fontSize: theme.typography.pxToRem(15),
-    flexBasis: '33.33%',
-    flexShrink: 0,
-  },
-  currentHeading: {
-    fontSize: theme.typography.pxToRem(15),
-    flexBasis: '33.33%',
-    flexShrink: 0,
-    color: green[500],
-  },
-  secondaryHeading: {
-    fontSize: theme.typography.pxToRem(15),
-    color: theme.palette.text.secondary,
-  },
-  currentSecondaryHeading: {
-    fontSize: theme.typography.pxToRem(15),
-    color: green[500],
-  },
-}));
+});
 
 const ActionsWrapper = styled.div`
   display: flex;
@@ -38,7 +18,7 @@ const ActionsWrapper = styled.div`
   justify-content: flex-begin;
 
   button {
-    margin-right: 10px;
+    margin-bottom: 10px;
   }
 `;
 
@@ -46,12 +26,18 @@ const PaginationWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
+
+  button {
+    margin-top: 10px;
+    margin-left: 2px;
+    margin-bottom: 10px;
+  }
 `;
 
 const GroupList = () => {
   const classes = useStyles();
   const [loading, setLoading] = useState(true);
-  const [groupsList, setGroupsList] = useState([]);
+  const [groups, setGroups] = useState([]);
   const [groupsInfo, setGroupsInfo] = useState([]);
   const [reload, setReload] = useState(0);
   // pagination
@@ -73,16 +59,16 @@ const GroupList = () => {
   const setAllGroups = async () => {
     const list = await API.getGroupsList();
     if (!list) return [];
-    setGroupsList(list);
+    setGroups(list);
     return list;
   };
 
   const setNewOffset = async (newOffset) => {
     setOffset(newOffset);
     setLoading(true);
-    const txids = Array.from(groupsList.keys());
+    const txids = Array.from(groups.keys());
     const slice = txids.slice(newOffset, newOffset + perPage);
-    const info = await API.getGroupsInfo(slice, groupsList);
+    const info = await API.getGroupsInfo(slice, groups);
     if (info) setGroupsInfo(info);
     setLoading(false);
   };
@@ -111,7 +97,7 @@ const GroupList = () => {
           <PaginationWrapper>
             Pages:{' '}
             <Pagination
-              data={Array.from(groupsList.keys())}
+              data={Array.from(groups.keys())}
               setOffset={setNewOffset}
               offset={offset}
               perPage={perPage}

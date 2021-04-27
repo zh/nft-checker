@@ -28,7 +28,12 @@ const NftCard = (props) => {
         <CardHeader title={token.name} style={{ color: groupColor }} />
         {token.type === 65 && (
           <CardContent>
-            <NftGroupInfo group={token.parent} index={1} withTxid={false} />
+            <NftGroupInfo
+              group={token.parent}
+              index={1}
+              withTxid={false}
+              color={groupColor}
+            />
           </CardContent>
         )}
         {NFT.hasBCP(token) ? (

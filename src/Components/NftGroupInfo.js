@@ -14,11 +14,12 @@ const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
   },
-  heading: {
+  heading: (props) => ({
     fontSize: theme.typography.pxToRem(15),
     flexBasis: '33.33%',
     flexShrink: 0,
-  },
+    color: props.headingColor,
+  }),
   secondaryHeading: {
     fontSize: theme.typography.pxToRem(15),
     color: theme.palette.text.secondary,
@@ -26,8 +27,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const NftGroupInfo = (props) => {
-  const { group, withTxid, index } = props;
-  const classes = useStyles();
+  const { group, withTxid, index, color } = props;
+  const groupColors = {
+    headingColor: color,
+  };
+  const classes = useStyles(groupColors);
 
   return (
     <Accordion key={group.id}>
