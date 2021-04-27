@@ -11,6 +11,7 @@ import { red, green } from '@material-ui/core/colors';
 import NFT from '../services/nft.service';
 import MediaPayload from './MediaPayload';
 import BcpPayload from './BcpPayload';
+import NftGroupInfo from './NftGroupInfo';
 
 const explorerUri = 'https://simpleledger.info/#token/';
 
@@ -19,24 +20,17 @@ const NftCard = (props) => {
 
   if (!token || !token.id) return <div>No such token</div>;
 
-  const token2header = (token) => {
-    let text = token.symbol;
-    if (token.type === 65) {
-      text = `${text} (${token.parent.name})`;
-    }
-    return text;
-  };
-
   const groupColor = NFT.validGroup(token, groups) ? green[500] : red[600];
 
   return (
     <Card>
       <CardActionArea>
-        <CardHeader
-          title={token.name}
-          subheader={token2header(token)}
-          style={{ color: groupColor }}
-        />
+        <CardHeader title={token.name} style={{ color: groupColor }} />
+        {token.type === 65 && (
+          <CardContent>
+            <NftGroupInfo group={token.parent} index={1} withTxid={false} />
+          </CardContent>
+        )}
         {NFT.hasBCP(token) ? (
           <BcpPayload token={token} size={size} />
         ) : (

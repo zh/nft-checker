@@ -95,7 +95,7 @@ const getTokensInfo = async (txids) => {
   }
 };
 
-const getTokenInfo = async (txid) => {
+const getTokenInfo = async (txid, data) => {
   try {
     const query = {
       v: 3,
@@ -111,7 +111,8 @@ const getTokenInfo = async (txid) => {
     if (!result || !result.t || result.t.length === 0) return [];
     const details = info2obj(result.t[0]);
     if (details.type === 65) {
-      details.parent = await getTokenInfo(details.parent);
+      details.parent = await getTokenInfo(details.parent, data);
+      details.parent.imagesUri = data.get(details.parent.id);
     }
     return details;
   } catch (error) {

@@ -2,19 +2,10 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { makeStyles } from '@material-ui/core/styles';
 import { green } from '@material-ui/core/colors';
-import {
-  Button,
-  CircularProgress,
-  Typography,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-} from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { Button, CircularProgress } from '@material-ui/core';
+import NftGroupInfo from './NftGroupInfo';
 import Pagination from './Pagination';
 import API from '../services/api.service';
-
-const explorerUri = 'https://simpleledger.info/#token/';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ButtonsWrapper = styled.div`
+const ActionsWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-begin;
@@ -49,14 +40,15 @@ const ButtonsWrapper = styled.div`
   button {
     margin-right: 10px;
   }
-
-  button {
-    margin-right: 10px;
-  }
 `;
 
-const GroupList = (props) => {
-  const { token } = props;
+const PaginationWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+`;
+
+const GroupList = () => {
   const classes = useStyles();
   const [loading, setLoading] = useState(true);
   const [groupsList, setGroupsList] = useState([]);
@@ -95,19 +87,13 @@ const GroupList = (props) => {
     setLoading(false);
   };
 
-  const currentGroup = (id) => {
-    if (!token) return false;
-    const tokenId = token.type === 65 ? token.parent.id : token.id;
-    return id === tokenId;
-  };
-
   return (
     <div className={classes.root}>
       {loading ? (
         <CircularProgress />
       ) : (
         <>
-          <ButtonsWrapper>
+          <ActionsWrapper>
             <Button
               variant="outlined"
               size="large"
@@ -118,6 +104,11 @@ const GroupList = (props) => {
               <i className="fa fa-refresh"></i>
               &nbsp;Refresh
             </Button>
+          </ActionsWrapper>
+          {groupsInfo.map((row, index) => (
+            <NftGroupInfo group={row} index={index} withTxid={true} />
+          ))}
+          <PaginationWrapper>
             Pages:{' '}
             <Pagination
               data={Array.from(groupsList.keys())}
@@ -125,66 +116,7 @@ const GroupList = (props) => {
               offset={offset}
               perPage={perPage}
             />
-          </ButtonsWrapper>
-          {groupsInfo.map((row, index) => (
-            <Accordion key={row.id}>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls={`panel${index}a-content`}
-                id={`panel${index}a-header`}
-              >
-                <Typography
-                  className={
-                    currentGroup(row.id)
-                      ? classes.currentHeading
-                      : classes.heading
-                  }
-                >
-                  {row.symbol}
-                </Typography>
-                <Typography
-                  className={
-                    currentGroup(row.id)
-                      ? classes.currentSecondaryHeading
-                      : classes.secondaryHeading
-                  }
-                >
-                  {row.name}
-                </Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Typography className={classes.heading}>TXID</Typography>
-                <Typography className={classes.secondaryHeading}>
-                  <a
-                    href={`${explorerUri}${row.id}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    download
-                  >
-                    {row.id}
-                  </a>
-                </Typography>
-              </AccordionDetails>
-              <AccordionDetails>
-                <Typography className={classes.heading}>Doc URI</Typography>
-                <Typography className={classes.secondaryHeading}>
-                  {row.uri}
-                </Typography>
-              </AccordionDetails>
-              <AccordionDetails>
-                <Typography className={classes.heading}>Images URI</Typography>
-                <Typography className={classes.secondaryHeading}>
-                  {row.imagesUri}
-                </Typography>
-              </AccordionDetails>
-              <AccordionDetails>
-                <Typography className={classes.heading}>Quantity</Typography>
-                <Typography className={classes.secondaryHeading}>
-                  {row.quantity}
-                </Typography>
-              </AccordionDetails>
-            </Accordion>
-          ))}
+          </PaginationWrapper>
         </>
       )}
     </div>

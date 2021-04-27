@@ -11,7 +11,6 @@ import {
 } from '@material-ui/core';
 import API from '../services/api.service';
 import NftCard from '../Components/NftCard';
-import GroupList from '../Components/GroupList';
 import Disclaimer from '../Components/Disclaimer';
 
 const useStyles = makeStyles((theme) => ({
@@ -24,12 +23,6 @@ const useStyles = makeStyles((theme) => ({
     width: '557px',
     itemsAlign: 'center',
     color: theme.palette.text.secondary,
-  },
-  groups: {
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    width: '100%',
-    itemsAlign: 'center',
   },
   disclaimer: {
     marginLeft: 'auto',
@@ -51,6 +44,13 @@ const Home = (props) => {
     if (name === 'txid') setTx(value);
   };
 
+  const setAllGroups = async () => {
+    const list = await API.getGroupsList();
+    if (!list) return [];
+    setGroups(list);
+    return list;
+  };
+
   const handleSubmit = useCallback(
     async (event) => {
       try {
@@ -58,15 +58,11 @@ const Home = (props) => {
         if (!tx || tx === '') return;
         setLoading(true);
         setToken(null);
-        let data = await API.getTokenInfo(tx);
+        const groupsList = await setAllGroups();
+        const data = await API.getTokenInfo(tx, groupsList);
         setLoading(false);
         if (!data || !data.name) return;
         setToken(data);
-        setLoading(true);
-        data = await API.getGroupsList();
-        setLoading(false);
-        if (!data) return;
-        setGroups(data);
       } catch (error) {
         console.error(error);
       }
@@ -118,13 +114,6 @@ const Home = (props) => {
             ) : (
               <div>Please enter txid</div>
             )}
-          </Paper>
-        </Grid>
-      </Grid>
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <Paper className={classes.groups}>
-            <GroupList token={token} />
           </Paper>
         </Grid>
       </Grid>
