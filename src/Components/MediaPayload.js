@@ -1,6 +1,13 @@
 import React from 'react';
+import styled from 'styled-components';
 import { CardMedia, CardContent, Typography } from '@material-ui/core';
 import NFT from '../services/nft.service';
+
+const MediaWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 
 const MediaPayload = (props) => {
   const { token, groups, size } = props;
@@ -8,14 +15,16 @@ const MediaPayload = (props) => {
   return (
     <>
       {token.type === 65 && (
-        <CardMedia
-          image={NFT.imageURI(token, groups, size)}
-          title={token.name}
-          style={{
-            height: `${size}px`,
-            width: `${size}px`,
-          }}
-        />
+        <MediaWrapper>
+          <CardMedia
+            image={NFT.imageURI(token, groups, size)}
+            title={token.name}
+            style={{
+              height: `300px`,
+              width: `300px`,
+            }}
+          />
+        </MediaWrapper>
       )}
       {NFT.onIPFS(token) && (
         <CardContent>

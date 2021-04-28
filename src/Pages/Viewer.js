@@ -70,7 +70,7 @@ const Viewer = (props) => {
                 {loading ? (
                   <CircularProgress />
                 ) : (
-                  <NftCard token={token} groups={groups} size={128} />
+                  <NftCard token={token} groups={groups} size="original" />
                 )}
               </Paper>
             </Grid>

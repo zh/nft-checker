@@ -17,12 +17,11 @@ const imageURI = (token, groups, size = 128) => {
     return `${ipfsPrefix}${token.uri.substr(7, token.uri.length)}`;
   }
   if (validGroup(token, groups) && token.type === 65) {
-    const tokenGroup = groups.filter((g) => g.id === token.parent.id);
-    let uri = tokenGroup[0].imagesUri;
+    let uri = groups.get(token.parent.id);
     if (uri.substr(-1) !== '/') uri += '/';
     return `${uri}${size}/${token.id}.png`;
   }
-  return `https://via.placeholder.com/${size}.png`;
+  return `https://via.placeholder.com/300.png`;
 };
 
 // TODO: check also for valid payload (parse)
