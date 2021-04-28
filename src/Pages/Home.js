@@ -110,7 +110,7 @@ const Home = (props) => {
             {loading ? (
               <CircularProgress />
             ) : token && token.name ? (
-              <NftCard token={token} groups={groups} size={128} />
+              <NftCard token={token} groups={groups} size="original" />
             ) : (
               <div>Please enter txid</div>
             )}
